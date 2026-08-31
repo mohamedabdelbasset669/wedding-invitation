@@ -1,0 +1,863 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>عمر & نانسي</title>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400&family=Cairo:wght@300;400;600;700&family=Great+Vibes&display=swap" rel="stylesheet">
+<style>
+* { margin:0; padding:0; box-sizing:border-box; -webkit-tap-highlight-color:transparent; }
+
+:root {
+  --cream:   #FBF8F3;
+  --warm:    #F5EFE6;
+  --blush:   #EDD9C8;
+  --rose:    #C8896A;
+  --rose2:   #A86848;
+  --gold:    #B8963E;
+  --gold2:   #D4AF6A;
+  --sage:    #8A9E88;
+  --ink:     #2C2218;
+  --ink2:     #5C4A38;
+  --muted:   #9C8B7A;
+  --white:   #FFFFFF;
+}
+
+html, body {
+  background: var(--cream);
+  font-family: 'Cairo', sans-serif;
+  min-height: 100vh;
+  width: 100%;
+  max-width: 100vw;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  color: var(--ink);
+  overflow-x: hidden;
+  scroll-behavior: smooth;
+}
+
+/* ══════════════════
+   LANDING SCREEN
+══════════════════ */
+.landing {
+  position: fixed;
+  inset: 0;
+  background: var(--cream);
+  z-index: 9999;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  transition: opacity 1.3s ease, visibility 1.3s ease;
+  overflow: hidden;
+}
+
+.landing.out { opacity: 0; visibility: hidden; pointer-events: none; }
+
+.floral-tl, .floral-br {
+  position: absolute;
+  width: min(55vw, 240px);
+  opacity: 0.22;
+  pointer-events: none;
+}
+.floral-tl { top: -20px; right: -20px; transform: rotate(0deg); }
+.floral-br { bottom: -20px; left: -20px; transform: rotate(180deg); }
+
+.landing-body {
+  position: relative;
+  z-index: 2;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  padding: 0 clamp(20px, 8vw, 48px);
+  gap: 0;
+  width: 100%;
+}
+
+.land-tag {
+  font-size: clamp(9px, 2.5vw, 11px);
+  letter-spacing: 5px;
+  text-transform: uppercase;
+  color: var(--rose);
+  font-weight: 700;
+  margin-bottom: clamp(12px, 3vw, 20px);
+}
+
+.land-names {
+  font-family: 'Great Vibes', cursive;
+  font-size: clamp(48px, 17vw, 82px);
+  color: var(--ink);
+  line-height: 1.05;
+}
+
+.land-names em {
+  color: var(--rose);
+  font-style: normal;
+}
+
+.land-ornament {
+  margin: clamp(12px, 3vw, 20px) 0 clamp(10px, 2.5vw, 16px);
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  width: min(200px, 50vw);
+}
+.land-ornament::before, .land-ornament::after {
+  content: '';
+  flex: 1;
+  height: 1px;
+  background: linear-gradient(to right, transparent, var(--blush));
+}
+.land-ornament::after { background: linear-gradient(to left, transparent, var(--blush)); }
+.land-ornament-dot { width: 5px; height: 5px; border-radius: 50%; background: var(--rose); flex-shrink: 0; }
+
+.land-date {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: clamp(14px, 4vw, 20px);
+  color: var(--ink2);
+  letter-spacing: 3px;
+  font-style: italic;
+  margin-bottom: clamp(28px, 6vw, 40px);
+}
+
+.land-btn {
+  background: var(--rose);
+  color: #fff;
+  border: none;
+  border-radius: 50px;
+  padding: clamp(12px, 3vw, 16px) clamp(32px, 8vw, 48px);
+  font-family: 'Cairo', sans-serif;
+  font-size: clamp(13px, 3.5vw, 16px);
+  font-weight: 700;
+  letter-spacing: 1px;
+  cursor: pointer;
+  box-shadow: 0 8px 28px rgba(200, 137, 106, 0.35);
+  transition: all 0.3s ease;
+  position: relative;
+  overflow: hidden;
+}
+
+.land-btn::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: rgba(255,255,255,0.15);
+  opacity: 0;
+  transition: opacity 0.3s;
+}
+
+.land-btn:hover { transform: translateY(-3px); box-shadow: 0 14px 36px rgba(200,137,106,0.4); }
+.land-btn:hover::after { opacity: 1; }
+.land-btn:active { transform: translateY(0); }
+
+.land-hint {
+  margin-top: 16px;
+  font-size: 12px;
+  color: var(--muted);
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+/* ══════════════════
+   INVITATION CARD
+══════════════════ */
+.card {
+  width: 100%;
+  max-width: 520px;
+  background: var(--cream);
+  opacity: 0;
+  transition: opacity 0.9s ease 0.2s;
+  display: flex;
+  flex-direction: column;
+  will-change: transform, opacity;
+  transform: translateZ(0);
+}
+.card.show { opacity: 1; }
+
+/* ── HERO ── */
+.hero {
+  position: relative;
+  min-height: 100vh;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: flex-end;
+  /* رجعنا اللون الأساسي للتصميم */
+  background: var(--cream); 
+}
+
+.hero::before {
+  content: '';
+  position: absolute;
+  top: 16vh;
+  left: 50%;
+  transform: translateX(-50%);
+  width: min(70vw, 300px);
+  height: min(70vw, 300px);
+  border-radius: 50%;
+  background: rgba(200,137,106,0.08);
+  z-index: 1;
+}
+
+.hero::after {
+  content: '';
+  position: absolute;
+  top: 13vh;
+  left: 50%;
+  transform: translateX(-50%);
+  width: min(80vw, 340px);
+  height: min(80vw, 340px);
+  border-radius: 50%;
+  border: 1px solid rgba(200,137,106,0.15);
+  z-index: 1;
+}
+
+.hero-photo {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: contain; 
+  object-position: center 30%; /* تظبيط مكانهم بالظبط جوه الدايرة */
+  transform: scale(1.15) translateZ(0); /* تكبيرهم بشكل مناسب */
+  z-index: 2;
+  /* 🌟🌟🌟 سر الإخفاء: الخاصية دي بتدمج الصورة مع الخلفية وبتخلي أي لون أبيض شفاف تماماً 🌟🌟🌟 */
+  mix-blend-mode: multiply; 
+}
+
+.hero-fade {
+  position: absolute;
+  inset: 0;
+  /* تدرج لوني لنفس لون الـ cream عشان ندمج الأطراف السفلية */
+  background: linear-gradient(
+    to bottom,
+    rgba(251, 248, 243, 0) 0%,
+    rgba(251, 248, 243, 0) 65%,
+    rgba(251, 248, 243, 0.7) 85%,
+    rgba(251, 248, 243, 1) 100%
+  );
+  z-index: 3;
+}
+
+.hero-text {
+  position: relative;
+  z-index: 4;
+  padding: 0 28px 20px;
+  text-align: center;
+  width: 100%;
+}
+
+.hero-tag {
+  font-size: 10px;
+  letter-spacing: 5px;
+  text-transform: uppercase;
+  color: var(--rose2);
+  font-weight: 700;
+  margin-bottom: 6px;
+  opacity: 0;
+  transform: translateY(14px);
+  transition: all 0.7s ease 0.5s;
+}
+
+.card.show .hero-tag { opacity: 1; transform: translateY(0); }
+
+.hero-names {
+  font-family: 'Great Vibes', cursive;
+  font-size: min(14vw, 64px);
+  color: var(--ink);
+  line-height: 1.1;
+  opacity: 0;
+  transform: translateY(18px);
+  transition: all 0.8s ease 0.7s;
+}
+
+.hero-names .amp {
+  color: var(--rose);
+  font-size: min(16vw, 75px);
+}
+
+.card.show .hero-names { opacity: 1; transform: translateY(0); }
+
+.hero-date {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 15px;
+  color: var(--ink2);
+  font-style: italic;
+  letter-spacing: 2px;
+  margin-top: 4px;
+  opacity: 0;
+  transition: opacity 0.7s ease 1.1s;
+}
+.card.show .hero-date { opacity: 1; }
+
+.scroll-arrow {
+  position: relative;
+  z-index: 4;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+  padding: 18px 0 30px;
+  opacity: 0;
+  transition: opacity 0.7s ease 1.6s;
+  animation: arrowBounce 2s ease-in-out infinite 2s;
+  cursor: pointer;
+}
+.card.show .scroll-arrow { opacity: 0.5; }
+@keyframes arrowBounce {
+  0%,100% { transform: translateY(0); }
+  50% { transform: translateY(7px); }
+}
+.scroll-arrow i { font-size: 16px; color: var(--rose); }
+.scroll-arrow span { font-size: 9px; letter-spacing: 3px; color: var(--muted); text-transform: uppercase; font-weight: 600; }
+
+/* ── BODY ── */
+.body { display: flex; flex-direction: column; align-items: center; }
+
+.ornament {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  width: 85%;
+  max-width: 340px;
+  margin: 40px 0;
+  opacity: 0;
+  transform: scaleX(0.7);
+  transition: all 0.6s ease;
+}
+
+.ornament.visible { opacity: 1; transform: scaleX(1); }
+
+.orn-line {
+  flex: 1;
+  height: 1px;
+  background: linear-gradient(to right, transparent, var(--blush) 40%, var(--blush) 60%, transparent);
+}
+
+.orn-center { display: flex; align-items: center; gap: 6px; }
+.orn-d { width: 5px; height: 5px; border-radius: 50%; background: var(--rose); opacity: 0.5; }
+.orn-d.big { width: 7px; height: 7px; opacity: 1; }
+
+.section {
+  width: 100%;
+  padding: 0 clamp(14px, 5vw, 28px);
+  opacity: 0;
+  transform: translateY(28px);
+  transition: opacity 0.7s ease, transform 0.7s ease;
+}
+.section.visible { opacity: 1; transform: translateY(0); }
+
+/* ─ Invite text ─ */
+.invite-wrap {
+  background: var(--white);
+  border-radius: 24px;
+  padding: clamp(24px, 6vw, 40px) clamp(18px, 5vw, 32px);
+  text-align: center;
+  box-shadow: 0 4px 30px rgba(140,80,50,0.07);
+  border: 1px solid rgba(237,217,200,0.8);
+}
+
+.invite-title {
+  font-family: 'Great Vibes', cursive;
+  font-size: clamp(28px, 8vw, 42px);
+  color: var(--rose);
+  margin-bottom: 14px;
+}
+
+.invite-text {
+  font-size: clamp(13px, 4vw, 17px);
+  color: var(--ink2);
+  line-height: 2.1;
+  font-weight: 300;
+}
+
+/* ─ Date card ─ */
+.date-card {
+  background: var(--white);
+  border-radius: 24px;
+  overflow: hidden;
+  box-shadow: 0 4px 30px rgba(140,80,50,0.07);
+  border: 1px solid rgba(237,217,200,0.8);
+}
+
+.date-top {
+  background: var(--rose);
+  padding: clamp(20px, 5vw, 32px) clamp(16px, 4vw, 28px);
+  text-align: center;
+  position: relative;
+  overflow: hidden;
+}
+
+.date-top::before {
+  content: '';
+  position: absolute;
+  top: -40px; right: -40px;
+  width: 140px; height: 140px;
+  border-radius: 50%;
+  background: rgba(255,255,255,0.08);
+}
+
+.date-top::after {
+  content: '';
+  position: absolute;
+  bottom: -60px; left: -30px;
+  width: 180px; height: 180px;
+  border-radius: 50%;
+  background: rgba(255,255,255,0.05);
+}
+
+.date-day-num {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: clamp(72px, 22vw, 108px);
+  font-weight: 600;
+  color: #fff;
+  line-height: 0.9;
+  letter-spacing: -4px;
+  position: relative;
+  z-index: 1;
+}
+
+.date-month-name {
+  font-size: clamp(9px, 2.5vw, 12px);
+  letter-spacing: 6px;
+  color: rgba(255,255,255,0.85);
+  text-transform: uppercase;
+  font-weight: 700;
+  margin-top: 8px;
+  position: relative;
+  z-index: 1;
+}
+
+.date-bottom {
+  padding: clamp(16px, 4vw, 26px) clamp(16px, 4vw, 28px);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 12px;
+}
+
+.date-year-text {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: clamp(16px, 4.5vw, 22px);
+  color: var(--muted);
+  font-style: italic;
+  letter-spacing: 2px;
+}
+
+.time-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  background: rgba(200,137,106,0.1);
+  border: 1.5px solid rgba(200,137,106,0.25);
+  border-radius: 50px;
+  padding: clamp(8px, 2.5vw, 12px) clamp(18px, 5vw, 28px);
+  font-size: clamp(13px, 3.5vw, 16px);
+  color: var(--rose2);
+  font-weight: 700;
+  letter-spacing: 1px;
+}
+
+/* ─ Countdown ─ */
+.cd-card {
+  background: var(--white);
+  border-radius: 24px;
+  padding: clamp(22px, 5vw, 34px) clamp(12px, 4vw, 22px) clamp(18px, 4vw, 28px);
+  box-shadow: 0 4px 30px rgba(140,80,50,0.07);
+  border: 1px solid rgba(237,217,200,0.8);
+  text-align: center;
+}
+
+.cd-title {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: clamp(15px, 4vw, 19px);
+  font-style: italic;
+  color: var(--muted);
+  letter-spacing: 2px;
+  margin-bottom: clamp(16px, 4vw, 26px);
+}
+
+#countdown {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 0;
+  direction: ltr;
+}
+
+.cd-box { text-align: center; position: relative; }
+
+.cd-box:not(:last-child)::after {
+  content: ':';
+  position: absolute;
+  left: 100%;
+  top: 6px;
+  transform: translateX(-50%);
+  font-family: 'Cormorant Garamond', serif;
+  font-size: clamp(20px, 6vw, 30px);
+  color: var(--blush);
+  line-height: 1;
+  font-weight: 600;
+}
+
+.cd-num {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: clamp(36px, 11vw, 54px);
+  font-weight: 600;
+  color: var(--rose);
+  line-height: 1;
+  display: block;
+}
+
+.cd-lbl {
+  font-size: clamp(7px, 2vw, 10px);
+  letter-spacing: 2px;
+  color: var(--muted);
+  text-transform: uppercase;
+  margin-top: 6px;
+  display: block;
+  font-weight: 600;
+}
+
+/* ─ Actions ─ */
+.actions { display: flex; flex-direction: column; gap: 14px; }
+
+.act-btn {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  background: var(--white);
+  border: 1.5px solid rgba(237,217,200,0.9);
+  border-radius: 18px;
+  padding: 18px 20px;
+  text-decoration: none;
+  color: var(--ink);
+  cursor: pointer;
+  transition: all 0.25s ease;
+  box-shadow: 0 2px 16px rgba(140,80,50,0.05);
+}
+
+.act-btn:hover, .act-btn:active {
+  border-color: var(--rose);
+  transform: translateY(-2px);
+  box-shadow: 0 8px 28px rgba(200,137,106,0.15);
+}
+
+.act-ico {
+  width: 48px;
+  height: 48px;
+  border-radius: 14px;
+  background: rgba(200,137,106,0.1);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 20px;
+  color: var(--rose);
+  flex-shrink: 0;
+  transition: all 0.25s;
+}
+
+.act-btn:hover .act-ico { background: var(--rose); color: #fff; }
+
+.act-info { flex: 1; text-align: right; }
+.act-name { font-size: 15px; font-weight: 700; }
+.act-sub { font-size: 12px; color: var(--muted); margin-top: 3px; }
+
+.act-arr { font-size: 12px; color: var(--blush); transition: all 0.2s; }
+.act-btn:hover .act-arr { color: var(--rose); transform: translateX(-4px); }
+
+/* Music playing */
+.music-act.on { border-color: rgba(200,137,106,0.5); background: rgba(200,137,106,0.04); }
+.music-act.on .act-ico { background: var(--rose); color: #fff; }
+
+@keyframes beat { 0%,100%{transform:scale(1)} 50%{transform:scale(1.2)} }
+.music-act.on .act-ico i { animation: beat 0.9s ease-in-out infinite; }
+
+/* ── FOOTER ── */
+.footer {
+  padding: 50px 20px 60px;
+  text-align: center;
+  opacity: 0;
+  transform: translateY(24px);
+  transition: opacity 0.7s ease, transform 0.7s ease;
+}
+
+.footer.visible { opacity: 1; transform: translateY(0); }
+
+.footer-mono {
+  font-family: 'Great Vibes', cursive;
+  font-size: 52px;
+  color: var(--rose);
+  display: block;
+  margin-bottom: 10px;
+}
+
+.footer-info {
+  font-size: 12px;
+  letter-spacing: 3px;
+  color: var(--muted);
+  font-weight: 300;
+}
+
+.footer-dots {
+  display: flex;
+  justify-content: center;
+  gap: 8px;
+  margin-top: 24px;
+}
+.footer-dots span {
+  width: 4px; height: 4px; border-radius: 50%;
+  background: var(--blush);
+}
+.footer-dots span:nth-child(2) { background: var(--rose); }
+
+/* ══════════════════
+   DESKTOP RESPONSIVENESS
+══════════════════ */
+@media (min-width: 768px) {
+  body {
+    background: linear-gradient(135deg, var(--warm) 0%, var(--blush) 100%);
+    padding: 40px 0;
+  }
+  
+  .card {
+    border-radius: 32px; 
+    box-shadow: 0 25px 60px rgba(140,80,50,0.15); 
+    margin: 0 auto;
+    overflow: hidden;
+    border: 1px solid rgba(255,255,255,0.5);
+    min-height: auto; 
+  }
+
+  .hero {
+     min-height: 80vh; 
+  }
+}
+</style>
+</head>
+<body>
+
+<div class="landing" id="landing">
+  <svg class="floral-tl" viewBox="0 0 300 300" fill="none" xmlns="http://www.w3.org/2000/svg">
+    <path d="M280 20 Q200 60 160 120 Q120 180 60 200 Q20 210 10 280" stroke="#C8896A" stroke-width="2" fill="none"/>
+    <path d="M260 10 Q180 80 140 150 Q100 200 40 230" stroke="#C8896A" stroke-width="1.2" fill="none" opacity="0.5"/>
+    <path d="M300 50 Q230 70 190 130 Q150 190 80 210" stroke="#C8896A" stroke-width="1" fill="none" opacity="0.4"/>
+    <ellipse cx="160" cy="120" rx="18" ry="8" fill="#C8896A" opacity="0.3" transform="rotate(-30 160 120)"/>
+    <ellipse cx="200" cy="80" rx="14" ry="6" fill="#C8896A" opacity="0.25" transform="rotate(-50 200 80)"/>
+    <ellipse cx="110" cy="170" rx="16" ry="7" fill="#C8896A" opacity="0.2" transform="rotate(-10 110 170)"/>
+    <circle cx="160" cy="120" r="5" fill="#C8896A" opacity="0.6"/>
+    <circle cx="200" cy="80" r="4" fill="#B8963E" opacity="0.5"/>
+    <circle cx="110" cy="170" r="4" fill="#C8896A" opacity="0.4"/>
+    <circle cx="70" cy="200" r="6" fill="#C8896A" opacity="0.5"/>
+    <circle cx="140" cy="50" r="3" fill="#B8963E" opacity="0.4"/>
+    <ellipse cx="153" cy="113" rx="8" ry="4" fill="#C8896A" opacity="0.4" transform="rotate(-30 153 113)"/>
+    <ellipse cx="167" cy="113" rx="8" ry="4" fill="#C8896A" opacity="0.4" transform="rotate(30 167 113)"/>
+    <ellipse cx="160" cy="107" rx="4" ry="8" fill="#C8896A" opacity="0.4" transform="rotate(0 160 107)"/>
+    <ellipse cx="160" cy="127" rx="4" ry="8" fill="#C8896A" opacity="0.35" transform="rotate(0 160 127)"/>
+  </svg>
+  <svg class="floral-br" viewBox="0 0 300 300" fill="none" xmlns="http://www.w3.org/2000/svg">
+    <path d="M280 20 Q200 60 160 120 Q120 180 60 200 Q20 210 10 280" stroke="#C8896A" stroke-width="2" fill="none"/>
+    <path d="M260 10 Q180 80 140 150 Q100 200 40 230" stroke="#C8896A" stroke-width="1.2" fill="none" opacity="0.5"/>
+    <ellipse cx="160" cy="120" rx="18" ry="8" fill="#C8896A" opacity="0.3" transform="rotate(-30 160 120)"/>
+    <circle cx="160" cy="120" r="5" fill="#C8896A" opacity="0.6"/>
+    <circle cx="70" cy="200" r="6" fill="#C8896A" opacity="0.5"/>
+    <ellipse cx="153" cy="113" rx="8" ry="4" fill="#C8896A" opacity="0.4" transform="rotate(-30 153 113)"/>
+    <ellipse cx="167" cy="113" rx="8" ry="4" fill="#C8896A" opacity="0.4" transform="rotate(30 167 113)"/>
+  </svg>
+
+  <div class="landing-body">
+    <div class="land-tag">دعوة زفاف</div>
+    <div class="land-names">Omar <em>♥</em> Nancy</div>
+    <div class="land-ornament">
+      <div class="land-ornament-dot"></div>
+      <div class="land-ornament-dot big"></div>
+      <div class="land-ornament-dot"></div>
+    </div>
+    <div class="land-date">يوم الجمعة،  ٢٥ سبتمبر ٢٠٢٦</div>
+    <button class="land-btn" onclick="openInv()">✦   افتح الدعوة   ✦</button>
+    <div class="land-hint">
+      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="var(--rose)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>
+      اضغط لتفتح الدعوة
+    </div>
+  </div>
+</div>
+
+<div class="card" id="card">
+  <div class="hero">
+    <img class="hero-photo" src="couple.jpg" alt="عمر و نانسي" onerror="this.style.display='none'">
+    <div class="hero-fade"></div>
+
+    <div class="hero-text">
+      <div class="hero-tag">Wedding Invitation</div>
+      <h1 class="hero-names"> Omar <span class="amp">♥</span> Nancy </h1>
+      <div class="hero-date">يوم الجمعة،  ٢٥ سبتمبر ٢٠٢٦</div>
+    </div>
+
+    <div class="scroll-arrow" onclick="scrollToSection()">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" style="color:var(--rose)"><polyline points="6 9 12 15 18 9"/></svg>
+      <span>تفاصيل</span>
+    </div>
+  </div>
+
+  <div class="body">
+    <div class="ornament" id="o1">
+      <div class="orn-line"></div>
+      <div class="orn-center"><div class="orn-d"></div><div class="orn-d big"></div><div class="orn-d"></div></div>
+      <div class="orn-line"></div>
+    </div>
+
+    <div class="section" id="s1">
+      <div class="invite-wrap">
+        <div class="invite-title">معكم بكل سعادة</div>
+        <p class="invite-text">
+          يتشرف عمر ونانسى بدعوتكم<br>
+          لمشاركتهم أجمل لحظات حياتهم<br>
+          في حفل زفافهم السعيد
+        </p>
+      </div>
+    </div>
+
+    <div class="ornament" id="o2">
+      <div class="orn-line"></div>
+      <div class="orn-center"><div class="orn-d"></div><div class="orn-d big"></div><div class="orn-d"></div></div>
+      <div class="orn-line"></div>
+    </div>
+
+    <div class="section" id="s2">
+      <div class="date-card">
+        <div class="date-top">
+          <div class="date-day-num">25</div>
+          <div class="date-month-name">September · سبتمبر</div>
+        </div>
+        <div class="date-bottom">
+          <div class="date-year-text">٢٠٢٦</div>
+          <div class="time-chip">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+            السابعة مساءً
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="ornament" id="o3">
+      <div class="orn-line"></div>
+      <div class="orn-center"><div class="orn-d"></div><div class="orn-d big"></div><div class="orn-d"></div></div>
+      <div class="orn-line"></div>
+    </div>
+
+    <div class="section" id="s3">
+      <div class="cd-card">
+        <div class="cd-title">العد التنازلي للفرح</div>
+        <div id="countdown">
+          <div class="cd-box"><span class="cd-num" id="days">00</span><span class="cd-lbl">يوم</span></div>
+          <div class="cd-box"><span class="cd-num" id="hours">00</span><span class="cd-lbl">ساعة</span></div>
+          <div class="cd-box"><span class="cd-num" id="mins">00</span><span class="cd-lbl">دقيقة</span></div>
+          <div class="cd-box"><span class="cd-num" id="secs">00</span><span class="cd-lbl">ثانية</span></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="ornament" id="o4">
+      <div class="orn-line"></div>
+      <div class="orn-center"><div class="orn-d"></div><div class="orn-d big"></div><div class="orn-d"></div></div>
+      <div class="orn-line"></div>
+    </div>
+
+    <div class="section" id="s4">
+      <div class="actions">
+        <a href="https://maps.app.goo.gl/bETEG7y6J2YuauHs5" target="_blank" class="act-btn">
+          <div class="act-ico"><svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z"/></svg></div>
+          <div class="act-info">
+            <div class="act-name">موقع القاعة</div>
+            <div class="act-sub">افتح على خرائط جوجل</div>
+          </div>
+          <svg class="act-arr" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 18 9 12 15 6"/></svg>
+        </a>
+
+        <div class="act-btn music-act" id="musicBtn" onclick="toggleMusic()">
+          <div class="act-ico"><svg id="musicIco" width="20" height="20" viewBox="0 0 24 24" fill="currentColor"><path d="M12 3v10.55c-.59-.34-1.27-.55-2-.55-2.21 0-4 1.79-4 4s1.79 4 4 4 4-1.79 4-4V7h4V3h-6z"/></svg></div>
+          <div class="act-info">
+            <div class="act-name" id="musicLabel">الموسيقى</div>
+            <div class="act-sub">ادخلي عمري</div>
+          </div>
+          <svg class="act-arr" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 18 9 12 15 6"/></svg>
+        </div>
+      </div>
+    </div>
+
+    <div class="footer" id="footer">
+      <span class="footer-mono">O ♥ N</span>
+      <div class="footer-info">يوم الجمعة ·٢٥ سبتمبر ٢٠٢٦</div>
+      <div class="footer-dots">
+        <span></span><span></span><span></span>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<audio id="audio" src="ادخلي عمري.m4a" loop></audio>
+
+<script>
+function openInv() {
+  document.getElementById('landing').classList.add('out');
+  const c = document.getElementById('card');
+  c.classList.add('show');
+  setTimeout(observe, 500);
+  
+  if (!playing) {
+    toggleMusic();
+  }
+}
+
+function scrollToSection() {
+  document.querySelector('.body').scrollIntoView({ behavior: 'smooth' });
+}
+
+function observe() {
+  const targets = document.querySelectorAll('.section, .ornament, .footer');
+  const io = new IntersectionObserver(entries => {
+    entries.forEach(e => { if (e.isIntersecting) e.target.classList.add('visible'); });
+  }, { threshold: 0.1 });
+  targets.forEach(t => io.observe(t));
+}
+
+let playing = false;
+function toggleMusic() {
+  const a = document.getElementById('audio');
+  const btn = document.getElementById('musicBtn');
+  const lbl = document.getElementById('musicLabel');
+  if (!playing) {
+    a.play().then(() => {
+      playing = true;
+      btn.classList.add('on');
+      lbl.textContent = 'جارٍ التشغيل ♪';
+    }).catch(() => {});
+  } else {
+    a.pause();
+    playing = false;
+    btn.classList.remove('on');
+    lbl.textContent = 'الموسيقى';
+  }
+}
+
+function tick() {
+  const t = new Date('2026-09-25T19:00:00');
+  const n = new Date();
+  let d = Math.max(0, t - n);
+  const days = Math.floor(d / 864e5);
+  const hrs  = Math.floor((d % 864e5) / 36e5);
+  const min  = Math.floor((d % 36e5) / 6e4);
+  const sec  = Math.floor((d % 6e4) / 1e3);
+  document.getElementById('days').textContent  = String(days).padStart(2,'0');
+  document.getElementById('hours').textContent = String(hrs).padStart(2,'0');
+  document.getElementById('mins').textContent  = String(min).padStart(2,'0');
+  document.getElementById('secs').textContent  = String(sec).padStart(2,'0');
+}
+tick(); setInterval(tick, 1000);
+</script>
+</body>
+</html>
